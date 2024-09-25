@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Audio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Subir un nuevo archivo de audio</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="control_number" class="form-label">Número de Control</label>
+                <input type="text" class="form-control" id="control_number" name="control_number" required>
+            </div>
+            <div class="mb-3">
+                <label for="file" class="form-label">Archivo de Audio</label>
+                <input type="file" class="form-control" id="file" name="file" accept="audio/*" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Subir</button>
+        </form>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Volver</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Archivos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .audio-card {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            margin-bottom: 10px;
+        }
+
+        .alert-custom {
+            background-color: #007bff; /* Color azul */
+            color: white; /* Texto en blanco */
+            border: 1px solid #0056b3; /* Color del borde */
+        }
+
+        .alert-custom .btn-close {
+            color: white; /* Color del botón de cerrar */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Sección de alertas -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-custom alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h2>Lista de archivos subidos</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Número de Control</th>
+                    <th scope="col">Nombre de Archivo</th>
+                    <th scope="col">Fecha de Subida</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for audio in audios %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ audio.control_number }}</td>
+                    <td>
+                        <div class="audio-card">
+                            <strong>{{ audio.filename }}</strong>
+                            <audio controls class="w-100 mt-2">
+                                <source src="{{ url_for('play', audio_id=audio.id) }}" type="audio/mpeg">
+                                Tu navegador no soporta el audio.
+                            </audio>
+                        </div>
+                    </td>
+                    <td>{{ audio.upload_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>
+                        <form action="{{ url_for('delete', audio_id=audio.id) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este archivo?');">Eliminar</button>
+                        </form>
+                        <a href="{{ url_for('update', audio_id=audio.id) }}" class="btn btn-warning btn-sm">Actualizar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script>
+        // Desaparecer alertas después de 3 segundos
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(alert => {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+            });
+        }, 3000);
+    </script>
+    
+</body>
+</html>
+
